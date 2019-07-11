@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.insta.Fragments.ComposeFragment;
+import com.example.insta.Fragments.PostsFragment;
+import com.example.insta.Fragments.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -32,9 +34,10 @@ public class HomeActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
-        //final Fragment home = new HomeFragment();
+        final Fragment posts = new PostsFragment();
         final Fragment addPhoto = new ComposeFragment();
-        //final Fragment profile = new ProfileFragment();
+        final Fragment profile = new ProfileFragment();
+
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -44,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
                         Fragment fragment;
                         switch (item.getItemId()) {
                             default:
-                                fragment = addPhoto;
+                                fragment = posts;
                                 break;
                             case R.id.action_search:
                                 fragment = addPhoto;
@@ -56,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                                 fragment = addPhoto;
                                 break;
                             case R.id.action_profile:
-                                fragment = addPhoto;
+                                fragment = profile;
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
