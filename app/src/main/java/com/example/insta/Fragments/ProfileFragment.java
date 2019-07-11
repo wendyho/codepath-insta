@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.insta.LoginActivity;
 import com.example.insta.Post;
@@ -22,6 +24,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProfileFragment extends PostsFragment {
@@ -29,6 +32,8 @@ public class ProfileFragment extends PostsFragment {
     private ProfileAdapter adapter;
     private RecyclerView rvProfilePosts;
     private Button btnLogout;
+    private TextView tvProfileName;
+    private ImageView ivProfileProfileImage;
 
     // onCreateView method is called when Fragment should create its view object hierarchy,
     // either dynamically or via XML layout inflation
@@ -40,7 +45,7 @@ public class ProfileFragment extends PostsFragment {
 
 
     @Override
-    protected void queryPosts() {
+    protected void queryPosts(Date maxId) {
         ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
         postQuery.include(Post.KEY_USER);
         postQuery.setLimit(20);
@@ -69,6 +74,8 @@ public class ProfileFragment extends PostsFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rvProfilePosts = view.findViewById(R.id.ivProfileProfileUsername);
+        ivProfileProfileImage = view.findViewById(R.id.ivProfileProfileImage);
+        tvProfileName = view.findViewById(R.id.tvProfileUsername);
 
 
         // create the data source
@@ -80,6 +87,8 @@ public class ProfileFragment extends PostsFragment {
         // set the layout manager on the recycler view
         rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
+        tvProfileName.setText(ParseUser.getCurrentUser().getUsername());
+
         // set the button
         btnLogout = view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -89,10 +98,11 @@ public class ProfileFragment extends PostsFragment {
                 ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
                 Intent i = new Intent(getContext(), LoginActivity.class);
                 startActivity(i);
+                getActivity().finish();
 
             }
         });
-        queryPosts();
+        queryPosts(maxId);
 
 
 
