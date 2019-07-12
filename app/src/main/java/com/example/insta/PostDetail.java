@@ -2,11 +2,16 @@ package com.example.insta;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.parse.ParseFile;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class PostDetail extends AppCompatActivity {
 
@@ -30,8 +35,12 @@ public class PostDetail extends AppCompatActivity {
 
         // unwrap the post passed in via intent
 
-        post = (Post) getIntent().getSerializableExtra("post");
-        tvHandleDetail.setText(post.getUser().getUsername());
+        post = (Post) getIntent().getParcelableExtra("post");
+        try {
+            tvHandleDetail.setText(post.getUser().fetchIfNeeded().getUsername());
+        } catch (com.parse.ParseException e) {
+            e.printStackTrace();
+        }
         ParseFile image = post.getImage();
        if(image != null) {
             Glide.with(this)
@@ -39,7 +48,23 @@ public class PostDetail extends AppCompatActivity {
                     .into(ivImageDetail);
         }
         tvDescriptionDetail.setText(post.getUser().getUsername() + " " + post.getDescription());
+       tvTimestamp.setText(getRelativeTimeAgo(post.getCreatedAt().toString()));
+    }
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
 
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
     }
 
 }

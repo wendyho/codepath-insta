@@ -102,6 +102,7 @@ public class ProfileFragment extends PostsFragment {
 
             }
         });
+
         queryPosts(maxId);
 
 

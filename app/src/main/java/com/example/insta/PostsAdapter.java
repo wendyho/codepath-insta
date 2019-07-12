@@ -135,7 +135,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 // create intent for new activity
                 Intent intent = new Intent(context, PostDetail.class);
                 // serialize the movie using parceler, use its short name as a key
-               intent.putExtra("post", (Serializable) post);
+               intent.putExtra("post", post);
                 // show the activity
                 context.startActivity(intent);
             }
